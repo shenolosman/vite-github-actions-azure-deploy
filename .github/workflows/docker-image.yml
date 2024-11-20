@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ "master" ]
 
+env:
+  AZURE_WEBAPP_NAME: shenolazureuppgift3
+
+
 jobs:
 
   # Job 1: Node.js Build and Test
@@ -49,13 +53,14 @@ jobs:
     needs: docker-build-push  # Ensures Docker image is built and pushed before deployment
 
     steps:
-    - name: 'Login to Azure'
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.SOAZURECREDENTIALS }}
+    # - name: 'Login to Azure'
+    #   uses: azure/login@v1
+    #   with:
+    #     creds: ${{ secrets.SOAZURECREDENTIALS }}
 
     - name: 'Deploy to Azure Web App'
       uses: azure/webapps-container-deploy@v2
       with:
-        app-name: 'shenolazureuppgift3'
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.SOAZURECREDENTIALS }}
         images: 'shenolosman/vite-app-dockerize:dev'
