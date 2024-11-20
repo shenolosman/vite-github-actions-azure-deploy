@@ -13,14 +13,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4    
-      - name: mr-smithers-excellent/docker-build-push@v6           
-      - name: Build & push Docker image
-        with:
-          image: shenolosman/vite-app-dockerize
-          tags: dev
-          registry: docker.io
-          dockerfile: Dockerfile
-          username: ${{ secrets.DOCKER_NAME }}
-          password: ${{ secrets.DOCKER_PASSWORD}}
-  
+    - uses: actions/checkout@v4    
+    - uses: mr-smithers-excellent/docker-build-push@v6           
+      name: Build & push Docker image
+      with:
+        image: shenolosman/vite-app-dockerize
+        tags: dev
+        registry: docker.io
+        dockerfile: Dockerfile
+        username: ${{ secrets.DOCKER_NAME }}
+        password: ${{ secrets.DOCKER_PASSWORD}}
+
