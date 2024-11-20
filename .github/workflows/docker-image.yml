@@ -53,13 +53,16 @@ jobs:
     needs: docker-build-push  # Ensures Docker image is built and pushed before deployment
 
     steps:
+    # - name: Lowercase the repo name and username
+    # run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
     # - name: 'Login to Azure'
     #   uses: azure/login@v1
     #   with:
     #     creds: ${{ secrets.SOAZURECREDENTIALS }}
 
     - name: 'Deploy to Azure Web App'
-      uses: azure/webapps-container-deploy@v2
+      id: deploy-to-webapp
+      uses: azure/webapps-deploy@v2
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
         publish-profile: ${{ secrets.SOAZURECREDENTIALS }}
