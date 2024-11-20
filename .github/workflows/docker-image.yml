@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Docker Image CI CD
 
 on:
   push:
@@ -8,19 +8,37 @@ on:
 
 jobs:
 
-  build:
-
+  # Job 1: Build and Push Docker Image
+  docker-build-push:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4    
-    - uses: mr-smithers-excellent/docker-build-push@v6           
-      name: Build & push Docker image
+    - uses: actions/checkout@v4
+    - uses: mr-smithers-excellent/docker-build-push@v6
+      name: Build & Push Docker Image
       with:
         image: shenolosman/vite-app-dockerize
         tags: dev
         registry: docker.io
         dockerfile: Dockerfile
         username: ${{ secrets.DOCKER_NAME }}
-        password: ${{ secrets.DOCKER_PASSWORD}}
+        password: ${{ secrets.DOCKER_PASSWORD }}
 
+  # Job 2: Node.js Build and Test
+  node-build-test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm ci
+    - run: npm run build --if-present
+    - run: npm test
