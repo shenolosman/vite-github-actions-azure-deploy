@@ -69,9 +69,11 @@ jobs:
     steps:
     - name: Trigger Azure Function Smoke Test
       run: |
-        RESPONSE=$(curl -o /dev/null -s -w "%{http_code}" "https://shenol-functionapp.azurewebsites.net/")
+        RESPONSE=$(curl -o /dev/null -s -w "%{http_code}" "https://shenol-functionapp.azurewebsites.net/api/smoketest")
         if [ "$RESPONSE" -ne 200 ]; then
           echo "Smoke test failed with status code $RESPONSE"
           exit 1
+        else
+          echo "Smoke test passed with status code $RESPONSE"
         fi
   
